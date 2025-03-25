@@ -19,7 +19,12 @@ const scrapeAmazon = async (keyword: string): Promise<Product[]> => {
     const url = `https://www.amazon.com.br/s?k=${encodeURIComponent(keyword)}`;
 
     // Making the GET request with the 'User-Agent' header to avoid blocking
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+      },
+    });
 
     // Loading the response HTML with JSDOM
     const dom = new JSDOM(response.data);
