@@ -68,8 +68,10 @@ app.get("/api/scrape", async (req: Request, res: Response) => {
   const keyword = req.query.keyword as string;
 
   // Checking if the keyword was passed
-  if (!keyword) {
-    return res.status(400).json({ error: "A palavra-chave é obrigatória!" });
+  if (!keyword || keyword.length < 2) {
+    return res
+      .status(400)
+      .json({ error: "A palavra-chave deve ter pelo menos 2 caracteres!" });
   }
   // Getting the products with the scrapeAmazon function
   const products = await scrapeAmazon(keyword);
