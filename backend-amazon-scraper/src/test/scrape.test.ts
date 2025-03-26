@@ -35,4 +35,13 @@ describe("Testing the endpoint /api/scrape", () => {
       "A palavra-chave deve ter pelo menos 2 caracteres!"
     );
   });
+
+  it("Should return error message if no products are found", async () => {
+    const res = await request(app).get(
+      "/api/scrape?keyword=produtoinexistente.produtoinexistente"
+    );
+
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe("Nenhum produto encontrado.");
+  });
 });
