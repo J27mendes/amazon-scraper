@@ -5,7 +5,7 @@ config();
 
 const port = process.env.PORT || 3000;
 
-// Inicia o servidor somente quando não estiver no ambiente de teste
+// Start the server only when not in the test environment
 if (process.env.NODE_ENV !== "test") {
   app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
