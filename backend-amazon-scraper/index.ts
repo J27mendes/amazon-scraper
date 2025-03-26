@@ -1,10 +1,15 @@
-import axios from "axios";
-import express, { type Request, type Response } from "express";
+import axios, { AxiosResponse } from "axios";
+import express, { Request, Response } from "express";
 import { JSDOM } from "jsdom";
+import cors from "cors";
 
 const app = express();
 const port = 3000;
 
+//configure CORS (Cross-Origin Resource Sharing) on ​​an Express server
+app.use(cors({ origin: "http://localhost:5173" }));
+
+// Typing the Product object
 interface Product {
   title: string;
   rating: string;
@@ -19,7 +24,7 @@ const scrapeAmazon = async (keyword: string): Promise<Product[]> => {
     const url = `https://www.amazon.com.br/s?k=${encodeURIComponent(keyword)}`;
 
     // Making the GET request with the 'User-Agent' header to avoid blocking
-    const response = await axios.get(url, {
+    const response: AxiosResponse = await axios.get(url, {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
@@ -29,13 +34,13 @@ const scrapeAmazon = async (keyword: string): Promise<Product[]> => {
     // Loading the response HTML with JSDOM
     const dom = new JSDOM(response.data);
     const products: Product[] = [];
-
     // Getting all product listings on the page
     dom.window.document
       .querySelectorAll(".s-main-slot .s-result-item")
       .forEach((item) => {
         const title =
-          item.querySelector("h2 .a-link-normal")?.textContent || "Sem título";
+          item.querySelector("h2.a-size-base-plus span")?.textContent ||
+          "Sem título";
         const rating =
           item.querySelector(".a-icon-alt")?.textContent || "Sem avaliação";
         const numReviews =
@@ -66,15 +71,13 @@ app.get("/api/scrape", async (req: Request, res: Response) => {
   if (!keyword) {
     return res.status(400).json({ error: "A palavra-chave é obrigatória!" });
   }
-
   // Getting the products with the scrapeAmazon function
   const products = await scrapeAmazon(keyword);
-
   // Returning the products as JSON
   res.json(products);
 });
 
-// Iniciando o servidor na porta 3000
+// Starting the server on port 3000
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
