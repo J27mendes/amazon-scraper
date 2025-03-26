@@ -33,6 +33,22 @@ document.getElementById("searchButton").addEventListener("click", async () => {
         `;
         productsContainer.appendChild(productDiv);
       });
+
+      if (products.length > 0) {
+        // Creating a back button
+        const backButton = document.createElement("button");
+        backButton.innerText = "Voltar para busca";
+        backButton.classList.add("back-button");
+
+        // When the button is clicked, the page returns to its initial state
+        backButton.addEventListener("click", () => {
+          productsContainer.innerHTML = "";
+          document.getElementById("keyword").value = "";
+        });
+
+        // Add the button AFTER all products
+        productsContainer.appendChild(backButton);
+      }
     }
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
