@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "CommonJS",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowJs": true,
+    "experimentalDecorators": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/test/**/*.ts"],
   "exclude": ["node_modules"]
 }
