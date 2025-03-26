@@ -55,12 +55,14 @@ const scrapeAmazon = async (keyword: string): Promise<Product[]> => {
         const imageUrl =
           item.querySelector(".s-image")?.getAttribute("src") || "";
 
-        products.push({
-          title,
-          rating,
-          numReviews,
-          imageUrl,
-        });
+        if (title && title !== "Sem título" && imageUrl) {
+          products.push({
+            title,
+            rating: rating || "Sem avaliação",
+            numReviews: numReviews || "0",
+            imageUrl,
+          });
+        }
       });
 
     return products;
