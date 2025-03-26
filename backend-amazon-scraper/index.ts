@@ -6,7 +6,7 @@ import cors from "cors";
 const app = express();
 const port = 3000;
 
-//configure CORS (Cross-Origin Resource Sharing) on ​​an Express server
+// Configure CORS (Cross-Origin Resource Sharing) on ​​an Express server
 app.use(cors({ origin: "http://localhost:5173" }));
 
 // Typing the Product object
@@ -31,9 +31,15 @@ const scrapeAmazon = async (keyword: string): Promise<Product[]> => {
       },
     });
 
+    // Check if the response status is OK (200)
+    if (response.status !== 200) {
+      throw new Error(`Erro ao acessar a Amazon. Status: ${response.status}`);
+    }
+
     // Loading the response HTML with JSDOM
     const dom = new JSDOM(response.data);
     const products: Product[] = [];
+
     // Getting all product listings on the page
     dom.window.document
       .querySelectorAll(".s-main-slot .s-result-item")
@@ -67,16 +73,27 @@ const scrapeAmazon = async (keyword: string): Promise<Product[]> => {
 app.get("/api/scrape", async (req: Request, res: Response) => {
   const keyword = req.query.keyword as string;
 
-  // Checking if the keyword was passed
+  // Checking if the keyword was passed and its length
   if (!keyword || keyword.length < 2) {
     return res
       .status(400)
       .json({ error: "A palavra-chave deve ter pelo menos 2 caracteres!" });
   }
-  // Getting the products with the scrapeAmazon function
-  const products = await scrapeAmazon(keyword);
-  // Returning the products as JSON
-  res.json(products);
+
+  try {
+    // Getting the products with the scrapeAmazon function
+    const products = await scrapeAmazon(keyword);
+
+    // Returning the products as JSON
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Nenhum produto encontrado." });
+    }
+
+    res.json(products);
+  } catch (error) {
+    // Returning a server error if something goes wrong
+    res.status(500).json({ error: "Erro ao buscar os produtos." });
+  }
 });
 
 // Starting the server on port 3000
