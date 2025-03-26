@@ -18,4 +18,12 @@ describe("Testing the endpoint /api/scrape", () => {
     expect(res.body[0]).toHaveProperty("numReviews");
     expect(res.body[0]).toHaveProperty("imageUrl");
   });
+
+  it("Should return products for the keyword 'lapis'", async () => {
+    const res = await request(app).get("/api/scrape?keyword=lapis");
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.length).toBeGreaterThan(0);
+  });
 });
