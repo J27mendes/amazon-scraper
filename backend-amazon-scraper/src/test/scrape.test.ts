@@ -26,4 +26,13 @@ describe("Testing the endpoint /api/scrape", () => {
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.length).toBeGreaterThan(0);
   });
+
+  it("Should return error if keyword is less than 2 characters", async () => {
+    const res = await request(app).get("/api/scrape?keyword=a");
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe(
+      "A palavra-chave deve ter pelo menos 2 caracteres!"
+    );
+  });
 });
