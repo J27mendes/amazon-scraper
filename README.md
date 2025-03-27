@@ -56,6 +56,6 @@ This project is an Amazon scraper, with a backend that provides product data and
 
    The application will be available at the address [http://localhost:5173](http://localhost:5173).
 
-## Como Funciona
+## How It Works
 
 After following the steps above, you will be able to search for products in the Amazon API directly from the frontend interface. Simply type a keyword in the search bar and click the button **Buscar**.
